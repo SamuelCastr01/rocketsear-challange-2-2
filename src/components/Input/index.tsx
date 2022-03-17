@@ -8,9 +8,16 @@ import {
 import { useField } from '@unform/core';
 
 import { Container } from './styles';
+import { IconBaseProps } from 'react-icons/lib';
 
-const Input = ({ name, icon: Icon, ...rest }) => {
-  const inputRef = useRef(null);
+interface InputProps {
+  name: string
+  placeholder?: string
+  icon?: React.ComponentType<IconBaseProps>
+}
+
+export default function Input({ name, icon: Icon, ...props }: InputProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled] = useState(false);
@@ -23,8 +30,8 @@ const Input = ({ name, icon: Icon, ...rest }) => {
 
   const handleInputBlur = useCallback(() => {
     setIsFocused(false);
-
-    setIsFilled(!!inputRef.current?.value);
+    const value = inputRef.current?.value as any as string
+    setIsFilled(!!value);
   }, []);
 
   useEffect(() => {
@@ -44,10 +51,8 @@ const Input = ({ name, icon: Icon, ...rest }) => {
         onBlur={handleInputBlur}
         defaultValue={defaultValue}
         ref={inputRef}
-        {...rest}
+        {...props}
       />
     </Container>
   );
 };
-
-export default Input;
